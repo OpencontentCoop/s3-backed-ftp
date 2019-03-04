@@ -1,4 +1,8 @@
 #!/bin/bash
+# vim: autoindent tabstop=2 shiftwidth=2 expandtab softtabstop=2 filetype=bash fileencoding=utf-8
+
+[[ $TRACE ]] && set -x
+
 # This script will update the env.list file (file containing USERS environrment variable) and add the new users if there are any.
 # Will check for new users at a given time interval (change sleep duration on line 33)
 

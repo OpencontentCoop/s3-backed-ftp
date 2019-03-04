@@ -1,4 +1,7 @@
 #!/bin/bash
+# vim: autoindent tabstop=2 shiftwidth=2 expandtab softtabstop=2 filetype=bash fileencoding=utf-8
+
+[[ $TRACE ]] && set -x
 
 # Check first if the required FTP_BUCKET variable was provided, if not, abort.
 if [ -z $FTP_BUCKET ]; then
@@ -31,15 +34,33 @@ if [ -z $IAM_ROLE ] && [ ! -z $AWS_ACCESS_KEY_ID ] && [ ! -z $AWS_SECRET_ACCESS_
 fi
 
 # Update the vsftpd.conf file to include the IP address if running on an EC2 instance
-if curl -s http://instance-data.ec2.internal > /dev/null ; then
-  IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
-  sed -i "s/^pasv_address=/pasv_address=$IP/" /etc/vsftpd.conf
+if curl -s http://ifconfig.co > /dev/null ; then
+  IP=$(curl -s http://ifconfig.co)
+  sed -i "s/^pasv_address=.*/pasv_address=$IP/" /etc/vsftpd.conf
 else
   exit 1
+fi
+
+if [[ ! -z $BANNER ]]; then
+  sed -i "s/^ftpd_banner=.*/ftpd_banner=$BANNER/" /etc/vsftpd.conf
 fi
 
 # start s3 fuse
 # Code above is not needed if the IAM role is attaced to EC2 instance 
 # s3fs provides the iam_role option to grab those credentials automatically
-/usr/local/bin/s3fs $FTP_BUCKET /home/aws/s3bucket -o allow_other -o mp_umask="0022" -o iam_role="$IAM_ROLE" #-d -d -f -o f2 -o curldbg
+MP_UMASK=0022
+UMASK=0002
+FS_OPTIONS="-o allow_other -o mp_umask='$MP_UMASK' -o umask='$UMASK'"
+
+if [ ! -z $IAM_ROLE ]; then
+  FS_OPTIONS="$FS_OPTIONS -o iam_role='$IAM_ROLE'"
+fi
+
+if [[ $TRACE ]] ; then
+  FS_OPTIONS="$FS_OPTIONS -d -d -f -o f2 -o curldbg"
+fi
+
+/usr/local/bin/s3fs $FTP_BUCKET /home/aws/s3bucket $FS_OPTIONS
+
 /usr/local/users.sh
+
