@@ -12,8 +12,10 @@ RUN apt-get -y update && apt-get -y install --no-install-recommends \
  make \
  pkg-config \
  python3-pip \
+ python3-setuptools \
  vsftpd \
  openssh-server \
+ sudo \ 
  supervisor \
  && rm -rf /var/lib/apt/lists/*
  
