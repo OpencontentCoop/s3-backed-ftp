@@ -35,6 +35,9 @@ To run:
 2. ` FTP_BUCKET ` = S3 bucket where ftp/sftp users data will be stored.
 3. ` CONFIG_BUCKET ` = S3 bucket where the config data (env.list file) will be stored.
 4. ` IAM_ROLE ` = name of role account linked to EC2 instance the container is running in.
+5. ` TRACE ` = 1 to enable verbose options in bash scripts
+6. ` MP_UMASK ` option in s3fs (default 0022)
+6. ` UMASK ` option in s3fs (default 0002 -> rwxrwxr-x)
 
 ### Optional Environment Variables
 These two environment variables only need to be set if there is no linked IAM role to the EC2 instance.
