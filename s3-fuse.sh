@@ -50,7 +50,7 @@ fi
 # s3fs provides the iam_role option to grab those credentials automatically
 MP_UMASK=0022
 UMASK=0002
-FS_OPTIONS="-o allow_other -o mp_umask='$MP_UMASK' -o umask='$UMASK'"
+FS_OPTIONS="-o allow_other -o mp_umask=$MP_UMASK -o umask=$UMASK"
 
 if [ ! -z $IAM_ROLE ]; then
   FS_OPTIONS="$FS_OPTIONS -o iam_role='$IAM_ROLE'"
