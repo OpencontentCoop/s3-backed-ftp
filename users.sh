@@ -1,4 +1,7 @@
 #!/bin/bash
+# vim: autoindent tabstop=2 shiftwidth=2 expandtab softtabstop=2 filetype=bash fileencoding=utf-8
+
+[[ $TRACE ]] && set -x
 
 FTP_DIRECTORY="/home/aws/s3bucket/ftp-users"
 
