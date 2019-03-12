@@ -2,7 +2,7 @@ version: "3.4"
 
 services:
   server:
-    image: registry.gitlab.com/lorello/s3-backed-ftp:1.0
+    image: registry.gitlab.com/opencontent/s3-backed-ftp:latest
     restart: unless-stopped
     environment:
       #TRACE: "1"				# uncomment this parameter to show detailed logs
