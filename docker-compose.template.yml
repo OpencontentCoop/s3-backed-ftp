@@ -1,0 +1,25 @@
+version: "3.4"
+
+services:
+  server:
+    image: registry.gitlab.com/lorello/s3-backed-ftp:1.0
+    restart: unless-stopped
+    environment:
+      #TRACE: "1"				# uncomment this parameter to show detailed logs
+      AWS_ACCESS_KEY_ID: XXXXXXXXXXXXXXXX
+      AWS_SECRET_ACCESS_KEY: XXXXXXXXXXXXXXXX 
+      CONFIG_BUCKET: "config-bucket"
+      FTP_BUCKET: "ftp-bucket"			# <- no . in this field or it breaks fuse mount
+      USERS: "test:M4CJhs2hStKMs" 		# test/test
+      BANNER: "FTP Proxy to S3"
+    devices:
+      - "/dev/fuse:/dev/fuse"
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    ports:
+      - "2100:21"
+      - "2200:22"
+      - "30000-30100:30000-30100"
+

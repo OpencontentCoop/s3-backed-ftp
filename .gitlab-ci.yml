@@ -1,0 +1,66 @@
+image: docker:latest
+
+stages:
+    - build
+    - push
+
+variables:
+    CONTAINER_TMP_IMAGE: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" 				# ...:adbcdefg01234
+
+services:
+  - docker:dind
+
+before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
+common_build:
+    stage: build
+    script:
+        - docker pull  $CONTAINER_TMP_IMAGE || docker build --pull -t $CONTAINER_TMP_IMAGE . #Build docker image
+        - docker push  $CONTAINER_TMP_IMAGE
+    only:
+      - branches
+      - tags
+
+push_branches:
+    stage: push
+    script:
+        - docker pull  $CONTAINER_TMP_IMAGE
+        - docker tag $CONTAINER_TMP_IMAGE "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME"	# ...:branch-name
+        - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME"
+    only:
+        - branches
+        
+push_tags:
+    stage: push
+    script:
+        - docker pull  $CONTAINER_TMP_IMAGE
+        - docker tag $CONTAINER_TMP_IMAGE "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+        - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+    only:
+        - tags
+
+
+push_latest:
+    stage: push
+    script:
+        - docker pull  $CONTAINER_TMP_IMAGE
+        - docker tag $CONTAINER_TMP_IMAGE "$CI_REGISTRY_IMAGE:latest"
+        - docker push "$CI_REGISTRY_IMAGE:latest"
+    only:
+        - master
+
+#update-on-staging:
+#    stage: delivery
+#    before_script:
+#        - apk add --update python py-pip python-dev && pip install docker-compose # install docker-compose
+#        - docker version
+#        - docker-compose version
+#        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+#    script:
+#        - test -f /srv/myapp/docker-compose.yml && docker-compose -f /srv/myapp/docker-compose.yml pull <image>
+#        - docker-compose -f /srv/myapp/docker-compose.yml up -d --force-recreate <image>
+#    only:
+#        - develop
+
+
