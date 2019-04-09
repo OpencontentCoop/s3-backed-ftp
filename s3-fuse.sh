@@ -62,5 +62,26 @@ fi
 
 /usr/local/bin/s3fs $FTP_BUCKET /home/aws/s3bucket $FS_OPTIONS
 
+if [[ $? -gt 0 ]]; then
+  echo "ERROR mounting '$FTP_BUCKET', cannot continue"
+  exit 1
+fi  
+
+MOUNT_TIMEOUT=10
+for ((i = 1; i <= $MOUNT_TIMEOUT; i++)); do
+  if $(mount | egrep -q '^s3fs'); then
+     echo "SUCCESS, mounted '$FTP_BUCKET'!"
+     break
+  else
+    echo "No s3fs filesystem found, s3fs mount of '$FTP_BUCKET' is still connecting, waiting..."
+    sleep 1
+  fi
+done
+
+if ! $(mount | egrep -q '^s3fs'); then
+  echo "No s3fs filesystem found, s3fs mount of '$FTP_BUCKET' probably failed"
+  exit 2
+fi
+
 /usr/local/users.sh
 
