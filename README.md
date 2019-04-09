@@ -44,4 +44,14 @@ These two environment variables only need to be set if there is no linked IAM ro
 2. ` AWS_SECRET_ACCESS_KEY ` = IAM user account secret access key.
 3. ` AWS_DEFAULT_REGION ` = bucket region
 
+
+### GitLab & AWS Elastic Container Registry configuration
+
+To use gitlab CI add the following variables to GitLab CI Configuration:
+
+1. ` AWS_ACCESS_KEY_ID ` = IAM user account access key.
+2. ` AWS_SECRET_ACCESS_KEY ` = IAM user account secret access key.
+3. ` AWS_ECR_IMAGE ` = Image name in ECR
+
+
 **Enjoy!**
