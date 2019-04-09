@@ -33,8 +33,8 @@ push_branches:
         - docker pull  $CONTAINER_TMP_IMAGE
         - docker tag $CONTAINER_TMP_IMAGE "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME"	# ...:branch-name
         - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME"
-        - docker tag $CONTAINER_TMP_IMAGE "$ECR_IMAGE:$CI_COMMIT_REF_NAME"	# ...:branch-name
-        - docker push "$ECR_IMAGE:$CI_COMMIT_REF_NAME"	# ...:branch-name
+        - docker tag $CONTAINER_TMP_IMAGE "$AWS_ECR_IMAGE:$CI_COMMIT_REF_NAME"	# ...:branch-name
+        - docker push "$AWS_ECR_IMAGE:$CI_COMMIT_REF_NAME"	# ...:branch-name
     only:
         - branches
         
@@ -44,8 +44,8 @@ push_tags:
         - docker pull  $CONTAINER_TMP_IMAGE
         - docker tag $CONTAINER_TMP_IMAGE "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
         - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
-        - docker tag $CONTAINER_TMP_IMAGE "$ECR_IMAGE:$CI_COMMIT_TAG"
-        - docker push "$ECR_IMAGE:$CI_COMMIT_TAG"
+        - docker tag $CONTAINER_TMP_IMAGE "$AWS_ECR_IMAGE:$CI_COMMIT_TAG"
+        - docker push "$AWS_ECR_IMAGE:$CI_COMMIT_TAG"
     only:
         - tags
 
@@ -56,8 +56,8 @@ push_latest:
         - docker pull  $CONTAINER_TMP_IMAGE
         - docker tag $CONTAINER_TMP_IMAGE "$CI_REGISTRY_IMAGE:latest"
         - docker push "$CI_REGISTRY_IMAGE:latest"
-        - docker tag $CONTAINER_TMP_IMAGE "$ECR_IMAGE:latest"
-        - docker push $CONTAINER_TMP_IMAGE "$ECR_IMAGE:latest"
+        - docker tag $CONTAINER_TMP_IMAGE "$AWS_ECR_IMAGE:latest"
+        - docker push $CONTAINER_TMP_IMAGE "$AWS_ECR_IMAGE:latest"
     only:
         - master
 
