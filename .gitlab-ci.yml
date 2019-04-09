@@ -15,7 +15,8 @@ before_script:
   - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   - apk add --no-cache curl jq python py-pip
   - pip install awscli
-  - $(aws ecr get-login --no-include-email --region us-east-1)
+  - echo "key: $AWS_ACCESS_KEY"
+  - $(aws ecr get-login --no-include-email --region eu-west-1)
 
 common_build:
     stage: build
