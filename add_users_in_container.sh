@@ -64,6 +64,6 @@ while true; do
     add_users
   else
     echo "Missing '$FTP_DIRECTORY', cannot add users, just sleep for $SLEEP_DURATION seconds and retry later"
-    sleep $SLEEP_DURATION
   fi
+  sleep $SLEEP_DURATION
 done
