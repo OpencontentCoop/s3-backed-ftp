@@ -1,0 +1,28 @@
+version: "3.4"
+
+services:
+  # https://hub.docker.com/r/lorello/s3-backed-ftp
+  server:
+    image: lorello/s3-backed-ftp
+    restart: unless-stopped
+    privileged: true
+    environment:
+      AWS_ACCESS_KEY_ID: xxxxxxxxxxxxxxxxxxx 
+      AWS_SECRET_ACCESS_KEY: yyyyyyyyyyyyyyyyyy
+      AWS_DEFAULT_REGION: eu-west-1
+      CONFIG_BUCKET: "ftp-server-config"
+      FTP_BUCKET: "ftp-server-files"
+      #USERS: "test:M4CJhs2hStKMs" 
+      BANNER: "FTP Proxy to S3"
+      #TRACE: 1
+    devices:
+      - "/dev/fuse:/dev/fuse"
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    ports:
+      - "2100:21"
+      - "2200:22"
+      - "30000-30100:30000-30100"
+#    volumes:
