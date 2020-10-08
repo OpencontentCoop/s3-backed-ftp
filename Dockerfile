@@ -15,6 +15,7 @@ RUN apt-get -y update && apt-get -y install --no-install-recommends \
  python3-setuptools \
  vsftpd \
  openssh-server \
+ rsync \
  sudo \ 
  supervisor \
  && rm -rf /var/lib/apt/lists/*
@@ -31,6 +32,7 @@ RUN git clone https://github.com/s3fs-fuse/s3fs-fuse.git && \
 RUN mkdir -p /home/aws/s3bucket/
 
 ADD s3-fuse.sh /usr/local/
+ADD s3-sync.sh /usr/local/
 
 ADD vsftpd.conf /etc/vsftpd.conf
 
