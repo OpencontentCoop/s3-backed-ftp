@@ -60,10 +60,20 @@ if [[ $TRACE ]] ; then
   FS_OPTIONS="$FS_OPTIONS -d -d -f -o f2 -o curldbg"
 fi
 
-/usr/local/bin/s3fs $FTP_BUCKET /home/aws/s3bucket $FS_OPTIONS
+S3_MOUNTPOINT=/home/aws/s3bucket
+[[ ! -d $S3_MOUNTPOINT ]] && mkdir -p $S3_MOUNTPOINT
+[[ ! -d ${S3_MOUNTPOINT}/ftp-users ]] && mkdir -p ${S3_MOUNTPOINT}/ftp-users
+
+if [[ -n $S3_DECOUPLED ]]; then
+  echo "S3 Fuse mount not required, a periodic s3-sync will be launched"
+  sleep 5
+  exit 0
+fi
+
+/usr/local/bin/s3fs $FTP_BUCKET $S3_MOUNTPOINT $FS_OPTIONS
 
 if [[ $? -gt 0 ]]; then
-  echo "ERROR mounting '$FTP_BUCKET', cannot continue"
+  echo "ERROR mounting '$FTP_BUCKET' in '$S3_MOUNTPOINT', cannot continue"
   exit 1
 fi  
 
@@ -79,7 +89,7 @@ for ((i = 1; i <= $MOUNT_TIMEOUT; i++)); do
 done
 
 if ! $(mount | egrep -q '^s3fs'); then
-  echo "No s3fs filesystem found, s3fs mount of '$FTP_BUCKET' probably failed"
+  echo "No s3fs filesystem found, s3fs mount of '$FTP_BUCKET' in '$S3_MOUNTPOINT' probably failed"
   exit 2
 fi
 
